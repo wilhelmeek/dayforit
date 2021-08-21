@@ -1,0 +1,21 @@
+on:
+  push:
+    branches:
+      - main
+
+name: Quickstart - Deploy Prebuilt Container
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun
+        with:
+          image: gcr.io/cloudrun/hello
+          service: hello-cloud-run
+          credentials: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Show Output
+        run: echo ${{ steps.deploy.outputs.url }}
