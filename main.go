@@ -57,10 +57,10 @@ func handleCheck(w http.ResponseWriter, r *http.Request) {
 		title = "It is an absolute day for it! :sunny:"
 		subtitle = "The weather today is *perfect*. Good day to get on the bikes!"
 	case primaryWeather.ID > 800:
-		title = "No reason not to cycle."
+		title = "No reason not to cycle. :cloud:"
 		subtitle = "The weather today is perfectly cycleable. Get on the bikes!"
 	case primaryWeather.ID >= 300 && primaryWeather.ID < 400:
-		title = "Worth a shot!"
+		title = "Worth a shot! :rain_cloud:"
 		subtitle = "It's a bit drizzly today, but gotta risk it for the biscuit."
 	default:
 		title = "Nope :no_good:"
