@@ -1,4 +1,4 @@
-package main
+package dayforit
 
 import (
 	"fmt"
@@ -6,29 +6,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/sirupsen/logrus"
 	"github.com/slack-go/slack"
 
 	owm "github.com/briandowns/openweathermap"
 )
 
-func main() {
-	logger := logrus.New()
-
-	port := "8080"
-	if p := os.Getenv("PORT"); p != "" {
-		port = p
-	}
-
-	http.HandleFunc("/check", handleCheck)
-
-	err := http.ListenAndServe(":"+port, nil)
-	if err != nil {
-		logger.WithError(err).Info("handling http traffic")
-	}
-}
-
-func handleCheck(w http.ResponseWriter, r *http.Request) {
+func Check(w http.ResponseWriter, r *http.Request) {
 	wtr, err := owm.NewCurrent(
 		"C",
 		"EN",
