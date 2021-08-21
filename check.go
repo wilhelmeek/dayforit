@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/pkg/errors"
 	"github.com/slack-go/slack"
 
 	owm "github.com/briandowns/openweathermap"
@@ -18,13 +19,21 @@ func Check(w http.ResponseWriter, r *http.Request) {
 		os.Getenv("OWM_KEY"),
 	)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(
+			w,
+			errors.Wrap(err, "getting owm new current").Error(),
+			http.StatusInternalServerError,
+		)
 		return
 	}
 
 	wtr.CurrentByZip(2017, "AU")
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(
+			w,
+			errors.Wrap(err, "getting current by zip").Error(),
+			http.StatusInternalServerError,
+		)
 		return
 	}
 
@@ -116,7 +125,11 @@ func Check(w http.ResponseWriter, r *http.Request) {
 		},
 	)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(
+			w,
+			errors.Wrap(err, "posting to slack").Error(),
+			http.StatusInternalServerError,
+		)
 		return
 	}
 
