@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"github.com/slack-go/slack"
 
@@ -16,15 +15,14 @@ import (
 func main() {
 	logger := logrus.New()
 
-	r := mux.NewRouter()
-	r.HandleFunc("/check", handleCheck)
-
 	port := "8080"
 	if p := os.Getenv("PORT"); p != "" {
 		port = p
 	}
 
-	err := http.ListenAndServe(":"+port, r)
+	http.HandleFunc("/check", handleCheck)
+
+	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		logger.WithError(err).Info("handling http traffic")
 	}
