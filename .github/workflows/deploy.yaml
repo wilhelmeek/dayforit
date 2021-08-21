@@ -13,6 +13,6 @@ jobs:
       - id: deploy
         uses: google-github-actions/deploy-cloud-functions@main
         with:
-          name: check
+          name: Check
           runtime: go113
           credentials: ${{ secrets.GCP_SA }}
