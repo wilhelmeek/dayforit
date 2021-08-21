@@ -13,28 +13,30 @@ import (
 )
 
 func Check(w http.ResponseWriter, r *http.Request) {
-	wtr, err := owm.NewCurrent(
-		"C",
-		"EN",
-		os.Getenv("OWM_KEY"),
-	)
+	err := check()
 	if err != nil {
 		http.Error(
 			w,
-			errors.Wrap(err, "getting owm new current").Error(),
+			errors.Wrap(err, "running check").Error(),
 			http.StatusInternalServerError,
 		)
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("ok"))
+}
+
+func check() error {
+	wtr, err := owm.NewCurrent("C", "EN", os.Getenv("OWM_KEY"))
+	if err != nil {
+		return errors.Wrap(err, "getting owm new current")
+	}
+
 	wtr.CurrentByZip(2017, "AU")
 	if err != nil {
-		http.Error(
-			w,
-			errors.Wrap(err, "getting current by zip").Error(),
-			http.StatusInternalServerError,
-		)
-		return
+		return errors.Wrap(err, "getting current by zip")
 	}
 
 	windSpeedKPH := int(math.Trunc(wtr.Wind.Speed * 60 * 60 / 1000))
@@ -125,17 +127,10 @@ func Check(w http.ResponseWriter, r *http.Request) {
 		},
 	)
 	if err != nil {
-		http.Error(
-			w,
-			errors.Wrap(err, "posting to slack").Error(),
-			http.StatusInternalServerError,
-		)
-		return
+		return errors.Wrap(err, "posting to slack")
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("ok"))
+	return nil
 }
 
 func directionFromDegrees(deg float64) string {
