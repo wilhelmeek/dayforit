@@ -89,14 +89,14 @@ func check() error {
 						[]*slack.TextBlockObject{
 							slack.NewTextBlockObject(
 								slack.MarkdownType,
-								fmt.Sprintf("*Currently*: %v°", wtr.Main.Temp),
+								fmt.Sprintf("*Currently*: %v°c", wtr.Main.Temp),
 								false,
 								false,
 							),
 							slack.NewTextBlockObject(
 								slack.MarkdownType,
 								fmt.Sprintf(
-									"*Range*: %v° - %v°",
+									"*Range*: %v°c - %v°c",
 									wtr.Main.TempMin,
 									wtr.Main.TempMax,
 								),
